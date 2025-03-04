@@ -1,0 +1,15 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="fetch" noun="OrderContactMech">
+        <in-parameters>
+            <parameter name="contactMechPurposeTypeEnumId" entity-name="moqui.ordercontactmech.OrderContactMech"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderContactList" type="List"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="moqui.ordercontactmech.OrderContactMech" list="orderContactList">
+                <econdition field-name="contactMechPurposeTypeEnumId" />
+            </entity-find>
+        </actions>
+    </service>
+</services>

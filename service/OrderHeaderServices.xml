@@ -1,0 +1,38 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="delete" noun="OrderHeader">
+        <in-parameters>
+            <parameter name="orderId"/>
+        </in-parameters>
+        <actions>
+            <entity-find-one entity-name="moqui.orderheader.OrderHeader" value-field="orderList">
+                <field-map field-name="orderId" from="context.orderId"/>
+            </entity-find-one>
+            <if condition="orderList != null">
+                <entity-delete-related value-field="orderList" relationship-name="OrderItem"/>
+                <entity-delete-related value-field="orderList" relationship-name="OrderPart"/>
+                <entity-delete-related value-field="orderList" relationship-name="OrderContactMech"/>
+                <entity-delete-related value-field="orderList" relationship-name="OrderPaymentPreference"/>
+                <entity-delete-related value-field="orderList" relationship-name="OrderStatus"/>
+                <entity-delete-related value-field="orderList" relationship-name="OrderAdjustment"/>
+                <entity-delete value-field="orderList"/>
+                <else>
+                    <message>Object does not exists</message>
+                </else>
+            </if>
+        </actions>
+    </service>
+
+    <service verb="fetch" noun="OrderHeader">
+        <in-parameters>
+            <parameter name="orderName" entity-name="moqui.orderheader.OrderHeader"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderList" type="List"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="moqui.orderheader.OrderHeader" list="orderList">
+                <econdition field-name="orderName" />
+            </entity-find>
+        </actions>
+    </service>
+</services>

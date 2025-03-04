@@ -1,0 +1,15 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="fetch" noun="OrderStatus">
+        <in-parameters>
+            <parameter name="statusId" entity-name="moqui.orderstatus.OrderStatus"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderStatusList" type="List"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="moqui.orderstatus.OrderStatus" list="orderStatusList">
+                <econdition field-name="statusId" />
+            </entity-find>
+        </actions>
+    </service>
+</services>

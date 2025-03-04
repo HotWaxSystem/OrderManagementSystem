@@ -1,0 +1,625 @@
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+    require-authentication="anonymous-all"
+    default-menu-title="OrderAppl">
+    <transition name="createOrder">
+        <service-call name="create#moqui.orderheader.OrderHeader"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrder">
+        <service-call name="update#moqui.orderheader.OrderHeader"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="deleteOrder">
+        <service-call name="OrderHeaderServices.delete#OrderHeader"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="createOrderItem">
+        <service-call name="create#moqui.orderitem.OrderItem"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrderItem">
+        <service-call name="update#moqui.orderitem.OrderItem"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="deleteOrderItem">
+        <service-call name="delete#moqui.orderitem.OrderItem"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="createOrderPart">
+        <service-call name="create#moqui.orderpart.OrderPart"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrderPart">
+        <service-call name="update#moqui.orderpart.OrderPart"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="deleteOrderPart">
+        <service-call name="OrderPartServices.delete#OrderPart"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="createOrderStatus">
+        <service-call name="create#moqui.orderstatus.OrderStatus"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrderStatus">
+        <service-call name="update#moqui.orderstatus.OrderStatus"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="deleteOrderStatus">
+        <service-call name="delete#moqui.orderstatus.OrderStatus"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="createOrderContactMech">
+        <service-call name="create#moqui.ordercontactmech.OrderContactMech"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrderContactMech">
+        <service-call name="update#moqui.ordercontactmech.OrderContactMech"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="createOrderAdjustment">
+        <service-call name="create#moqui.orderadjustment.OrderAdjustment"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrderAdjustment">
+        <service-call name="update#moqui.orderadjustment.OrderAdjustment"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="deleteOrderAdjustment">
+        <service-call name="delete#moqui.orderadjustment.OrderAdjustment"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="createOrderPayment">
+        <service-call name="create#moqui.orderpayment.OrderPaymentPreference"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="updateOrderPayment">
+        <service-call name="update#moqui.orderpayment.OrderPaymentPreference"/>
+        <default-response url="."/>
+    </transition>
+    <transition name="deleteOrderPayment">
+        <service-call name="OrderPaymentServices.delete#OrderPaymentPreference"/>
+        <default-response url="."/>
+    </transition>
+    <actions>
+        <service-call name="OrderHeaderServices.fetch#OrderHeader" in-map="[orderName : orderName]" out-map="context"/>
+        <service-call name="OrderItemServices.fetch#OrderItem" in-map="[orderItemTypeEnumId : orderItemTypeEnumId]" out-map="context"/>
+        <service-call name="OrderPartServices.fetch#OrderPart" in-map="[orderPartSeqId : orderPartSeqId]" out-map="context"/>
+        <service-call name="OrderStatusServices.fetch#OrderStatus" in-map="[statusId : statusId]" out-map="context"/>
+        <service-call name="OrderContactMechServices.fetch#OrderContactMech" in-map="[contactMechPurposeTypeEnumId : contactMechPurposeTypeEnumId]" out-map="context"/>
+        <service-call name="OrderAdjustmentServices.fetch#OrderAdjustment" in-map="[orderAdjustmentTypeEnumId : orderAdjustmentTypeEnumId]" out-map="context"/>
+        <service-call name="OrderPaymentServices.fetch#OrderPaymentPreference" in-map="[paymentMethodTypeEnumId : paymentMethodTypeEnumId]" out-map="context"/>
+    </actions>
+
+    <widgets>
+        <container-box>
+            <box-header>
+                <label text="Order Header Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrder" transition=".">
+                    <field name="orderName">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrder">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderList" list="orderList">
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="statusId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderDate">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderName">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="CreateOrderDialog" button-text="Create Order">
+                    <form-single name="CreateOrder" transition="createOrder">
+                        <auto-fields-entity entity-name="OrderHeader" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderDialog" button-text="Update Order">
+                    <form-single name="UpdateOrder" transition="updateOrder">
+                        <auto-fields-entity entity-name="OrderHeader" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="DeleteOrderDialog" button-text="Delete Order">
+                    <form-single name="DeleteOrder" transition="deleteOrder">
+                        <auto-fields-entity entity-name="OrderHeader" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Delete">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-body-nopad>
+        </container-box>
+        <container-box>
+            <box-header>
+                <label text="Order Item Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrderItem" transition=".">
+                    <field name="orderItemTypeEnumId">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrderItem">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderItemList" list="orderItemList">
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderPartSeqId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderItemSeqId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderItemTypeEnumId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="productId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="quantity">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="unitPrice">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="OrderItemDialog" button-text="Create OrderItem">
+                    <form-single name="CreateOrderItem" transition="createOrderItem">
+                        <auto-fields-entity entity-name="OrderItem" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderItemDialog" button-text="Update OrderItem">
+                    <form-single name="UpdateOrderItem" transition="updateOrderItem">
+                        <auto-fields-entity entity-name="OrderItem" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="DeleteOrderItemDialog" button-text="Delete OrderItem">
+                    <form-single name="DeleteOrderItem" transition="deleteOrderItem">
+                        <auto-fields-entity entity-name="OrderItem" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Delete">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-body-nopad>
+        </container-box>
+        <container-box>
+            <box-header>
+                <label text="Order Part Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrderPart" transition=".">
+                    <field name="orderPartSeqId">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrderPart">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderPartList" list="orderPartList">
+                    <field name="orderPartSeqId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="customerPartyId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="vendorPartyId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="postalContactMechId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="telecomContactMechId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="statusId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="partTotal">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="CreateOrderPartDialog" button-text="Create OrderPart">
+                    <form-single name="CreateOrderPart" transition="createOrderPart">
+                        <auto-fields-entity entity-name="OrderPart" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderPartDialog" button-text="Update OrderPart">
+                    <form-single name="UpdateOrderPart" transition="updateOrderPart">
+                        <auto-fields-entity entity-name="OrderPart" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="DeleteOrderPartDialog" button-text="Delete OrderPart">
+                    <form-single name="DeleteOrderPart" transition="deleteOrderPart">
+                        <auto-fields-entity entity-name="OrderPart" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Delete">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                </box-body-nopad>
+        </container-box>
+        <container-box>
+            <box-header>
+                <label text="Order Status Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrderStatus" transition=".">
+                    <field name="statusId">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrderStatus">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderStatusList" list="orderStatusList">
+                    <field name="orderStatusId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="statusId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderItemSeqId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderPaymentPreferenceId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="statusDatetime">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="CreateOrderStatusDialog" button-text="Create Order Status">
+                    <form-single name="CreateOrderStatus" transition="createOrderStatus">
+                        <auto-fields-entity entity-name="OrderStatus" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderStatusDialog" button-text="Update Order Status">
+                    <form-single name="UpdateOrderStatus" transition="updateOrderStatus">
+                        <auto-fields-entity entity-name="OrderStatus" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="DeleteOrderStatusDialog" button-text="Delete Order Status">
+                    <form-single name="DeleteOrderStatus" transition="deleteOrderStatus">
+                        <auto-fields-entity entity-name="OrderStatus" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Delete">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-body-nopad>
+        </container-box>
+        <container-box>
+            <box-header>
+                <label text="Order Adjustment Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrderAdjustment" transition=".">
+                    <field name="orderAdjustmentTypeEnumId">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrderAdjustment">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderAdjustmentList" list="orderAdjustmentList">
+                    <field name="orderAdjustmentId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderItemSeqId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderAdjustmentTypeEnumId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="amount">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="description">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="CreateOrderAdjustmentDialog" button-text="Create Order Adjustment">
+                    <form-single name="CreateOrderAdjustment" transition="createOrderAdjustment">
+                        <auto-fields-entity entity-name="OrderAdjustment" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderAdjustmentDialog" button-text="Update Order Adjustment">
+                    <form-single name="UpdateAdjustment" transition="updateAdjustment">
+                        <auto-fields-entity entity-name="OrderAdjustment" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="DeleteOrderAdjustmentDialog" button-text="Delete Order Adjustment">
+                    <form-single name="DeleteOrderAdjustment" transition="deleteOrderAdjustment">
+                        <auto-fields-entity entity-name="OrderAdjustment" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Delete">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-body-nopad>
+        </container-box>
+        <container-box>
+            <box-header>
+                <label text="Order Contact Mech Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrderContactMech" transition=".">
+                    <field name="contactMechPurposeTypeEnumId">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrderContactMech">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderContactMechList" list="orderContactList">
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="contactMechId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="contactMechPurposeTypeEnumId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="CreateOrderContactDialog" button-text="Create Order Contact">
+                    <form-single name="CreateOrderContact" transition="createOrderContactMech">
+                        <auto-fields-entity entity-name="OrderContactMech" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderContactMechDialog" button-text="Update Order ContactMech">
+                    <form-single name="UpdateContactMech" transition="updateContactMech">
+                        <auto-fields-entity entity-name="OrderContactMech" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-body-nopad>
+        </container-box>
+        <container-box>
+            <box-header>
+                <label text="Order Payment Operation" type="h2"/>
+            </box-header>
+            <box-body-nopad>
+                <form-single name="GetOrderPayment" transition=".">
+                    <field name="paymentMethodTypeEnumId">
+                        <default-field><text-line/></default-field>
+                    </field>
+                    <field name="getOrderPayment">
+                        <default-field>
+                            <submit/>
+                        </default-field>
+                    </field>
+                </form-single>
+                <form-list name="OrderPaymentList" list="orderPaymentList">
+                    <field name="orderPaymentPreferenceId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="orderId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="paymentMethodTypeEnumId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="statusId">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                    <field name="maxAmount">
+                        <default-field>
+                            <display/>
+                        </default-field>
+                    </field>
+                </form-list>
+                <container-dialog id="CreateOrderPaymentDialog" button-text="Create Order Payment">
+                    <form-single name="CreateOrderPayment" transition="createOrderPayment">
+                        <auto-fields-entity entity-name="OrderPaymentPreference" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="UpdateOrderPaymentDialog" button-text="Update Order Payment">
+                    <form-single name="UpdateOrderPayment" transition="updateOrderPayment">
+                        <auto-fields-entity entity-name="OrderPaymentPreference" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Update">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+                <container-dialog id="DeleteOrderPaymentDialog" button-text="Delete Order Payment">
+                    <form-single name="DeleteOrderPayment" transition="deleteOrderPayment">
+                        <auto-fields-entity entity-name="OrderPaymentPreference" field-type="edit"/>
+                        <field name="submitButton">
+                            <default-field title="Delete">
+                                <submit/>
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-body-nopad>
+        </container-box>
+    </widgets>
+</screen>

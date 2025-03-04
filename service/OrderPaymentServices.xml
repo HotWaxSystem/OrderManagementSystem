@@ -1,0 +1,33 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="delete" noun="OrderPaymentPreference">
+        <in-parameters>
+            <parameter name="orderPaymentPreferenceId"/>
+        </in-parameters>
+        <actions>
+            <entity-find-one entity-name="moqui.orderpayment.OrderPaymentPreference" value-field="orderList">
+                <field-map field-name="orderPaymentPreferenceId" from="context.orderPaymentPreferenceId"/>
+            </entity-find-one>
+            <if condition="orderList != null">
+                <entity-delete-related value-field="orderList" relationship-name="OrderStatus"/>
+                <entity-delete value-field="orderList"/>
+                <else>
+                    <message>Object does not exists</message>
+                </else>
+            </if>
+        </actions>
+    </service>
+
+    <service verb="fetch" noun="OrderPaymentPreference">
+        <in-parameters>
+            <parameter name="paymentMethodTypeEnumId" entity-name="moqui.orderpayment.OrderPaymentPreference"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderPaymentList" type="List"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="moqui.orderpayment.OrderPaymentPreference" list="orderPaymentList">
+                <econdition field-name="paymentMethodTypeEnumId" />
+            </entity-find>
+        </actions>
+    </service>
+</services>

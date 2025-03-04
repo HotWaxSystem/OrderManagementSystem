@@ -1,0 +1,33 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="delete" noun="OrderPart">
+        <in-parameters>
+            <parameter name="orderPartSeqId"/>
+        </in-parameters>
+        <actions>
+            <entity-find-one entity-name="moqui.orderpart.OrderPart" value-field="orderList">
+                <field-map field-name="orderPartSeqId" from="context.orderPartSeqId"/>
+            </entity-find-one>
+            <if condition="orderList != null">
+                <entity-delete-related value-field="orderList" relationship-name="OrderItem"/>
+                <entity-delete value-field="orderList"/>
+                <else>
+                    <message>Object does not exists</message>
+                </else>
+            </if>
+        </actions>
+    </service>
+
+    <service verb="fetch" noun="OrderPart">
+        <in-parameters>
+            <parameter name="orderPartSeqId" entity-name="moqui.orderpart.OrderPart"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderPartList" type="List"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="moqui.orderpart.OrderPart" list="orderPartList">
+                <econdition field-name="orderPartSeqId" />
+            </entity-find>
+        </actions>
+    </service>
+</services>

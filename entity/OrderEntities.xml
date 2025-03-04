@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/moqui-conf-3.xsd">
+
+    <entity entity-name="OrderHeader" package="moqui.orderheader">
+        <field name="orderId" type="id" is-pk="true"/>
+        <field name="statusId" type="id"/>
+        <field name="orderDate" type="date"/>
+        <field name="orderName" type="text-medium"/>
+    </entity>
+
+    <entity entity-name="OrderItem" package="moqui.orderitem">
+        <field name="orderId" type="id" is-pk="true"/>
+        <field name="orderPartSeqId" type="id"/>
+        <field name="orderItemSeqId" type="id" is-pk="true"/>
+        <field name="productId" type="id"/>
+        <field name="quantity" type="number-decimal"/>
+        <field name="unitPrice" type="currency-precise"/>
+        <field name="orderItemTypeEnumId" type="id"/>
+        <relationship type="one" related="moqui.orderheader.OrderHeader"/>
+        <relationship type="one" related="moqui.orderpart.OrderPart">
+            <key-map field-name="orderId"/>
+            <key-map field-name="orderPartSeqId"/>
+        </relationship>
+        <relationship type="one" related="moqui.product.Product"/> 
+        <relationship type="one" related="moqui.basic.Enumeration" title="OrderItemType">
+            <key-map field-name="orderItemTypeEnumId"/>
+        </relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="Order Item Type" enumTypeId="OrderItemType"/>
+            <moqui.basic.Enumeration description="Bulk" enumId="BULK_ORDER_ITEM" enumTypeId="OrderItemType" />
+            <moqui.basic.Enumeration description="Products" enumId="PRODUCT_ORDER_ITEM" enumTypeId="OrderItemType" />
+            <moqui.basic.Enumeration description="Rental" enumId="RENTAL_ORDER_ITEM" enumTypeId="OrderItemType" />
+            <moqui.basic.Enumeration description="Supplies" enumId="SUPPLIES_ORDER_ITEM" enumTypeId="OrderItemType" />
+        </seed-data>
+    </entity>
+
+    <entity entity-name="OrderPart" package="moqui.orderpart">
+        <field name="orderId" type="id" is-pk="true"/>
+        <field name="orderPartSeqId" type="id" is-pk="true"/>
+        <field name="customerPartyId" type="id"/>
+        <field name="postalContactMechId" type="id"/>
+        <field name="statusId" type="id"/>
+        <field name="partTotal" type="currency-amount"/>
+        <field name="vendorPartyId" type="id"/>
+        <field name="telecomContactMechId" type="id"/>
+        <relationship type="one" related="moqui.orderheader.OrderHeader"/>
+        <relationship type="one" related="moqui.party.Party">
+            <key-map field-name="vendorPartyId"/></relationship>
+        <relationship type="many" related="moqui.partyrole.PartyRole">
+            <key-map field-name="vendorPartyId" related="partyId"/></relationship>
+        <relationship type="one" related="moqui.party.Party">
+            <key-map field-name="customerPartyId"/></relationship>
+        <relationship type="many" related="moqui.partyrole.PartyRole">
+            <key-map field-name="customerPartyId" related="partyId"/></relationship>
+        <relationship type="many" related="moqui.partyclassificationappl.PartyClassificationAppl" >
+            <key-map field-name="customerPartyId" related="partyId"/></relationship> 
+        <relationship type="one" related="moqui.contactmech.ContactMech">
+            <key-map field-name="postalContactMechId"/></relationship>
+        <relationship type="one" related="moqui.postaladdress.PostalAddress">
+            <key-map field-name="postalContactMechId"/></relationship>
+        <relationship type="one" related="moqui.contactmech.ContactMech">
+            <key-map field-name="telecomContactMechId"/></relationship>
+        <relationship type="one" related="moqui.telecomnumber.TelecomNumber">
+            <key-map field-name="telecomContactMechId"/></relationship>
+    </entity>
+
+    <entity entity-name="OrderStatus" package="moqui.orderstatus">
+        <field name="orderStatusId" type="id" is-pk="true"/>
+        <field name="statusId" type="id"/>
+        <field name="orderId" type="id"/>
+        <field name="orderItemSeqId" type="id"/>
+        <field name="orderPaymentPreferenceId" type="id"/>
+        <field name="statusDatetime" type="date-time"/>
+        <relationship type="one" related="moqui.orderheader.OrderHeader">
+            <key-map field-name="orderId" related="orderId"/>
+        </relationship>
+        <relationship type="one" related="moqui.orderitem.OrderItem">
+            <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+        </relationship>
+        <relationship type="one" related="moqui.orderpayment.OrderPaymentPreference">
+            <key-map field-name="orderPaymentPreferenceId" related="orderPaymentPreferenceId"/>
+        </relationship>
+    </entity>
+
+    <entity entity-name="OrderAdjustment" package="moqui.orderadjustment">
+        <field name="orderAdjustmentId" type="id" is-pk="true"/>
+        <field name="orderId" type="id"/>
+        <field name="orderItemSeqId" type="id"/>
+        <field name="orderAdjustmentTypeEnumId" type="id"/>
+        <field name="amount" type="currency-amount"/>
+        <field name="description" type="text-medium"/>
+        <relationship type="one" related="moqui.orderheader.OrderHeader">
+            <key-map field-name="orderId" related="orderId"/>
+        </relationship>
+        <relationship type="one" related="moqui.orderitem.OrderItem">
+            <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+        </relationship>
+        <relationship type="one" related="moqui.basic.Enumeration" title="OrderAdjustmentType">
+            <key-map field-name="orderAdjustmentTypeEnumId"/>
+        </relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="Order Adjustment Type" enumTypeId="OrderAdjustmentType"/>
+            <moqui.basic.Enumeration description="Discount" enumId="DISCOUNT_ADJUSTMENT" enumTypeId="OrderAdjustmentType" />
+            <moqui.basic.Enumeration description="Fee" enumId="FEE" enumTypeId="OrderAdjustmentType" />
+            <moqui.basic.Enumeration description="Sales Tax" enumId="SALES_TAX" enumTypeId="OrderAdjustmentType" />
+            <moqui.basic.Enumeration description="Shipping Charges" enumId="SHIPPING_CHARGES" enumTypeId="OrderAdjustmentType" />
+        </seed-data>
+    </entity>
+
+    <entity entity-name="OrderContactMech" package="moqui.ordercontactmech">
+        <field name="orderId" type="id" is-pk="true"/>
+        <field name="contactMechId" type="id" is-pk="true"/>
+        <field name="contactMechPurposeTypeEnumId" type="id" is-pk="true"/>
+        <relationship type="one" related="moqui.contactmech.ContactMech">
+            <key-map field-name="contactMechId"/></relationship>
+        <relationship type="one" related="moqui.basic.Enumeration" title="PurposeType">
+                <key-map field-name="contactMechPurposeTypeEnumId" />
+        </relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="Purpose Type" enumTypeId="PurposeType"/>
+            <moqui.basic.Enumeration description="billing email" enumId="BILLING_EMAIL" enumTypeId="PurposeType" />
+            <moqui.basic.Enumeration description="billing location" enumId="BILLING_LOCATION" enumTypeId="PurposeType" />
+            <moqui.basic.Enumeration description="general location" enumId="GENERAL_LOCATION" enumTypeId="PurposeType" />
+            <moqui.basic.Enumeration description="phone billing" enumId="PHONE_BILLING" enumTypeId="PurposeType" />
+            <moqui.basic.Enumeration description="primary email" enumId="PRIMARY_EMAIL" enumTypeId="PurposeType" />
+            <moqui.basic.Enumeration description="primary location" enumId="PRIMARY_LOCATION" enumTypeId="PurposeType" />
+        </seed-data>
+    </entity>
+
+    <entity entity-name="OrderPaymentPreference" package="moqui.orderpayment">
+        <field name="orderPaymentPreferenceId" type="id" is-pk="true"/>
+        <field name="orderId" type="id"/>
+        <field name="paymentMethodTypeEnumId" type="id"/>
+        <field name="statusId" type="id"/>
+        <field name="maxAmount" type="currency-amount"/>
+        <relationship type="one" related="moqui.orderheader.OrderHeader">
+            <key-map field-name="orderId"/></relationship>
+        <relationship type="one" related="moqui.basic.Enumeration" title="PaymentType">
+                <key-map field-name="paymentMethodTypeEnumId" />
+        </relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="PaymentType" enumTypeId="PaymentType"/>
+            <moqui.basic.Enumeration description="Other Gateway" enumId="EXT_SHOP_OTHR_GTWAY" enumTypeId="PaymentType" />
+            <moqui.basic.Enumeration description="Gift Card" enumId="EXT_GIFT_CARD" enumTypeId="PaymentType" />
+            <moqui.basic.Enumeration description="Cash on Delivery" enumId="EXT_SHOP_CASH_ON_DEL" enumTypeId="PaymentType" />
+            <moqui.basic.Enumeration description="Visa" enumId="EXT_SHOP_VISA" enumTypeId="PaymentType" />
+        </seed-data>
+    </entity>
+
+    <entity entity-name="Product" package="moqui.product">
+        <field name="productId" type="id" is-pk="true"/>
+        <field name="productName" type="text-medium"/>
+        <field name="brandName" type="text-medium"/>
+    </entity>
+
+    <entity entity-name="Party" package="moqui.party">
+        <field name="partyId" type="id" is-pk="true"/>
+        <field name="partyTypeEnumId" type="id"/>
+        <relationship type="many" related="moqui.partyclassificationappl.PartyClassificationAppl">
+            <key-map field-name="partyId"/></relationship>
+        <relationship type="one" related="moqui.basic.Enumeration" title="PartyType">
+                <key-map field-name="partyTypeEnumId" />
+        </relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="Party Type" enumTypeId="PartyType"/>
+            <moqui.basic.Enumeration description="Person" enumId="Person" enumTypeId="PartyType" />
+            <moqui.basic.Enumeration description="Organization" enumId="Organization" enumTypeId="PartyType" />
+        </seed-data>
+    </entity>
+
+    <entity entity-name="PartyRole" package="moqui.partyrole">
+        <field name="partyId" type="id" is-pk="true"/>
+        <field name="roleTypeEnumId" type="id" is-pk="true"/>
+        <relationship type="one" related="moqui.party.Party"/>
+        <relationship type="one" related="moqui.basic.Enumeration" title="RoleType">
+            <key-map field-name="roleTypeEnumId"/>
+        </relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="Role Type" enumTypeId="RoleType"/>
+            <moqui.basic.Enumeration description="Customer" enumId="Customer" enumTypeId="RoleType" />
+            <moqui.basic.Enumeration description="Vendor" enumId="Vendor" enumTypeId="RoleType" />
+            <moqui.basic.Enumeration description="Supplier" enumId="Supplier" enumTypeId="RoleType" />
+        </seed-data>
+    </entity>
+
+    <entity entity-name="PartyClassification" package="moqui.partyclassification">
+        <field name="partyClassificationId" type="id" is-pk="true"/>
+        <field name="fromDate" type="date-time" is-pk="true"/>
+        <field name="thruDate" type="date-time"/> 
+    </entity>
+
+    <entity entity-name="PartyClassificationAppl" package="moqui.partyclassificationappl">
+        <field name="partyId" type="id" is-pk="true"/>
+        <field name="partyClassificationId" type="id" is-pk="true"/>
+        <relationship type="one" related="moqui.party.Party"/>
+        <relationship type="one" related="moqui.partyclassification.PartyClassification"/>
+    </entity>
+
+    <entity entity-name="ContactMech" package="moqui.contactmech">
+        <field name="contactMechId" type="id" is-pk="true"/>
+        <field name="infoString" type="text-medium"/>
+        <relationship type="one-nofk" related="moqui.telecomnumber.TelecomNumber"/>
+        <relationship type="one-nofk" related="moqui.postaladdress.PostalAddress"/>
+    </entity>
+
+    <entity entity-name="TelecomNumber" package="moqui.telecomnumber">
+        <field name="contactMechId" type="id" is-pk="true"/>
+        <field name="countryCode" type="text-short" />
+        <field name="areaCode" type="text-short" />
+        <field name="contactNumber" type="text-short" />
+        <relationship type="one" related="moqui.contactmech.ContactMech">
+            <key-map field-name="contactMechId" related="contactMechId" />
+        </relationship>
+    </entity>
+
+    <entity entity-name="PostalAddress" package="moqui.postaladdress">
+        <field name="contactMechId" type="id" is-pk="true" />
+        <field name="toName" type="text-medium" />
+        <field name="attnName" type="text-medium" />
+        <field name="address1" type="text-medium" />
+        <field name="address2" type="text-medium" />
+        <field name="city" type="text-medium" />
+        <field name="postalCode" type="text-short" />
+        <field name="state" type="text-medium"/>
+        <field name="country" type="text-medium"/>
+        <relationship type="one" related="moqui.contactmech.ContactMech">
+            <key-map field-name="contactMechId" related="contactMechId" />
+        </relationship>
+    </entity>
+
+</entities>

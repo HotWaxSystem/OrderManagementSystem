@@ -1,0 +1,35 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+    <service verb="fetch" noun="OrderItem">
+        <in-parameters>
+            <parameter name="orderItemTypeEnumId" entity-name="moqui.orderitem.OrderItem"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="orderItemList" type="List"/>
+        </out-parameters>
+        <actions>
+            <entity-find entity-name="moqui.orderitem.OrderItem" list="orderItemList">
+                <econdition field-name="orderItemTypeEnumId" />
+            </entity-find>
+        </actions>
+    </service>
+
+    <service verb="delete" noun="OrderItem">
+        <in-parameters>
+            <parameter name="orderItemSeqId"/>
+        </in-parameters>
+        <actions>
+            <entity-find-one entity-name="moqui.orderitem.OrderItem" value-field="orderItemList">
+                <field-map field-name="orderItemSeqId" from="context.orderItemSeqId"/>
+            </entity-find-one>
+            <if condition="orderItemList != null">
+                <entity-delete-related value-field="orderItemList" relationship-name="OrderStatus"/>
+                <entity-delete-related value-field="orderItemList" relationship-name="OrderAdjustment"/>
+                <entity-delete value-field="orderItemList"/>
+                <else>
+                    <message>Object does not exists</message>
+                </else>
+            </if>
+        </actions>
+    </service>
+
+</services>
